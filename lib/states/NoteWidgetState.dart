@@ -1,17 +1,21 @@
+// @dart=2.9
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app1/classes/Note.dart';
+import 'package:flutter_app1/interfaces/NoteListInterfaceCategroy.dart';
 import 'package:flutter_app1/widgets/NoteWidget.dart';
 
 class NoteWidgetState extends State<NoteWidget> {
-  late final Note note;
+  final Note note;
 
-  NoteWidgetState(this.note, this.position, this._EDITOR);
+  bool categoryItem;
 
-  bool Function() _EDITOR;
+  NoteWidgetState({@required this.note, @required this.position, @required this.EDITOR, @required this.categoryItem});
+
+  bool Function() EDITOR;
   int position;
   bool _isSelected = false;
-  late bool _isEdit;
+   bool _isEdit;
 
   toggleState() {
     setState(() {
@@ -37,9 +41,9 @@ class NoteWidgetState extends State<NoteWidget> {
         checkColor: Colors.white,
         activeColor: Colors.redAccent,
         value: _isSelected,
-        onChanged: (bool? val) {
+        onChanged: (bool val) {
           setState(() {
-            _isSelected = val!;
+            _isSelected = val;
             note.selected = _isSelected;
           });
         },
@@ -58,25 +62,48 @@ class NoteWidgetState extends State<NoteWidget> {
     res.add(Row(
       children: children,
     ));
-    if (note.category.length > 0) {
-      res.add(FlatButton(
-          onPressed: () {},
-          child: Container(
-            padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(100),
-                border: Border.all(color: Colors.white, width: 2)),
-            child: Text(
-              note.category,
-              textAlign: TextAlign.right,
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 17,
-                  color: note.bgColor,
-                  fontFamily: "RobotoSlab"),
-            ),
-          )));
+    if (note.category.isNotEmpty) {
+      res.add(
+        Row(
+          children: [
+            Text("Categories",style: TextStyle(fontSize: 15,color: Color.fromRGBO(0, 0, 0, 0.5)),textAlign: TextAlign.left),
+            Container(
+              height: 50,
+              width: 150,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                itemCount: note.category.length,
+                itemBuilder: (BuildContext bc, int index){
+                  String e = note.category[index];
+                  return FlatButton(
+                      onPressed: () {
+                        if(!categoryItem)
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>NoteListInterfaceCategroy(e)));
+                      },
+                      child: Container(
+                        padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(100),
+                            border: Border.all(color: Colors.white, width: 2)),
+                        child: Text(
+                          e,
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 17,
+                              color: note.bgColor,
+                              fontFamily: "RobotoSlab"),
+                        ),
+                      ));
+                },
+              ),
+            )
+          ],
+        )
+
+      );
     }
     return res;
   }
@@ -88,7 +115,7 @@ class NoteWidgetState extends State<NoteWidget> {
         padding: EdgeInsets.zero,
       ),
       onPressed: () {
-        if (Function.apply(_EDITOR, null)) {
+        if (Function.apply(EDITOR, null)) {
           print("EDITOR MODE ON");
           setState(() {
             _isSelected = !_isSelected;
@@ -142,7 +169,8 @@ class NoteWidgetState extends State<NoteWidget> {
 
   @override
   void initState() {
-    this._isEdit = Function.apply(_EDITOR, null);
+    print(categoryItem);
+    this._isEdit = Function.apply(EDITOR, null);
   }
 
 

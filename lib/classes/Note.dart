@@ -1,27 +1,27 @@
+// @dart=2.9
 import 'dart:ui';
 
 import 'package:flutter_app1/classes/colors.dart';
 
 class Note{
-  late bool selected = false;
-  late final String title;
-  late final String content;
-  late final DateTime date;
-  late final Color textColor;
-  late final Color bgColor;
-  late String category = "";
+   bool selected = false;
+   String title;
+    String content;
+    DateTime date;
+    Color textColor;
+    Color bgColor;
+   List<String> category = [];
 
   Note(this.title, this.content, this.date, this.textColor, this.bgColor);
   Note.extras(this.title, this.content, this.date, this.textColor, this.bgColor,this.category);
 
   Note.fromJSON(Map<String, dynamic> json) {
-
     this.title = json["title"];
     this.content = json["content"];
     this.date = DateTime.parse(json["date"]);
     this.textColor = MyColors.hexToColor(json["textColor"]);
     this.bgColor = MyColors.hexToColor(json["bgColor"]);
-    this.category = json["category"];
+    this.category = List<String>.from(json["category"]);
 
   }
 
@@ -36,8 +36,9 @@ class Note{
     return res;
   }
 
-
-
-
-
+  @override
+  bool operator == (Object other) {
+      Note note = other as Note;
+      return note.category == this.category && note.textColor == this.textColor && this.bgColor == note.bgColor && this.content == note.content && this.date  == note.date;
+  }
 }
