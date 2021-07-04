@@ -17,8 +17,11 @@ class Note{
   Note.extras(this.title, this.content, this.date, this.textColor, this.bgColor,this.category);
 
   Note.empty(){
+    this.content = "";
+    this.title = "";
     this.bgColor = Colors.blue;
     this.textColor = Colors.black;
+    this.category = ["NONE"];
   }
 
   Note.fromJSON(Map<String, dynamic> json) {
@@ -46,5 +49,16 @@ class Note{
   bool operator == (Object other) {
       Note note = other as Note;
       return note.category == this.category && note.textColor == this.textColor && this.bgColor == note.bgColor && this.content == note.content && this.date  == note.date;
+  }
+
+   @override
+  String toString() {
+    return 'Note{selected: $selected, title: $title, content: $content, date: $date, textColor: $textColor, bgColor: $bgColor, category: $category}';
+  }
+
+  void addCategory(String categori) {
+    if(category.remove("NONE"));
+    if(!this.category.contains(categori))
+      category.add(categori);
   }
 }

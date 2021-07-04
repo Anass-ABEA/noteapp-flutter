@@ -191,7 +191,7 @@ class _NoteListInterface extends State<NoteListInterfaceCategroy> {
         List<Map<String, dynamic>>.from(storage.getItem("list"));
 
     if (jsonList == null || jsonList.length == 0) {
-      jsonList = [];
+      /*jsonList = [];
       jsonList.add(Note.extras("NOTE TITLE", "THIS IS THE NOTE CONTENT ",
               DateTime.now(), Colors.black, Colors.blue, ["HELLO","TEST"])
           .toJSON());
@@ -228,7 +228,7 @@ class _NoteListInterface extends State<NoteListInterfaceCategroy> {
       jsonList.add(Note.extras("NOTE TITLE", "THIS IS THE NOTE CONTENT ",
               DateTime.now(), Colors.black, Colors.lightGreenAccent, ["HELLO"])
           .toJSON());
-      storage.setItem("list", jsonList);
+      storage.setItem("list", jsonList);*/
     } else {
       print("READ FROM JSON");
     }

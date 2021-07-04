@@ -2,8 +2,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app1/classes/Note.dart';
+import 'package:flutter_app1/interfaces/NewNoteInterface.dart';
 import 'package:flutter_app1/interfaces/NoteListInterfaceCategroy.dart';
 import 'package:flutter_app1/widgets/NoteWidget.dart';
+
+import '../main.dart';
 
 class NoteWidgetState extends State<NoteWidget> {
   final Note note;
@@ -123,6 +126,7 @@ class NoteWidgetState extends State<NoteWidget> {
           });
         } else {
           print("EDITOR MODE off");
+          Navigator.push(context,MaterialPageRoute(builder: (context)=>NewNoteInterface(note: note,pos: position,)));
         }
       },
       child: Container(

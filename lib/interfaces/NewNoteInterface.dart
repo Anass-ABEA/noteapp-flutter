@@ -5,12 +5,15 @@ import 'package:flutter_app1/states/NewNoteState.dart';
 
 class NewNoteInterface extends StatefulWidget{
   Note note;
-  NewNoteInterface({Key key, note : Note}): super(key: key){
+  int pos;
+  NewNoteInterface({Key key, note : Note,pos:int}): super(key: key){
     this.note = note;
+    this.pos = pos;
   }
 
+
   @override
-  NewNoteState createState() => NewNoteState(note);
+  NewNoteState createState() => NewNoteState(note,pos);
 
 
 }

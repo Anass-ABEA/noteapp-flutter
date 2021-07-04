@@ -1,14 +1,19 @@
 // @dart=2.9
 import 'package:flutter/material.dart';
+import 'package:flutter_app1/interfaces/CategoryListInterface.dart';
 import 'package:flutter_app1/interfaces/NewNoteInterface.dart';
 import 'package:flutter_app1/interfaces/NoteListInterface.dart';
-import 'package:flutter_app1/settings.dart';
+
+import 'interfaces/SettingsInterface.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MyApp(0));
 }
 
 class MyApp extends StatelessWidget {
+  final int page;
+
+  MyApp(this.page);
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -17,22 +22,24 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'NOTES'),
+      home: MyHomePage(title: 'NOTES',page: page,),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, @required this.title}) : super(key: key);
-
+  MyHomePage({Key key, @required this.title, this.page}) : super(key: key);
+  final int page;
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MyHomePageState createState() => _MyHomePageState(this.page);
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _selectedPage = 0;
+  int _selectedPage ;
+
+  _MyHomePageState(this._selectedPage);
 
   void _onPageSelected(int pos) {
     setState(() {
@@ -42,12 +49,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<Widget> _pages = [
     NoteListInterface(),
-    NewNoteInterface(note: null),
-    Center(
-      child: Text("OK 2"),
-    ),
-    Settings(),
+    NewNoteInterface(note: null, pos:-1),
+    SettngsInterface(),
   ];
+
+ /* List<Widget> _pages = [
+    NoteListInterface(),
+    NewNoteInterface(note: null, pos:-1),
+    CategoryListInterface(),
+    SettngsInterface(),
+  ];*/
 
   @override
   Widget build(BuildContext context) {
@@ -68,17 +79,12 @@ class _MyHomePageState extends State<MyHomePage> {
             backgroundColor: Colors.blue,
             activeIcon: Icon(Icons.add, size: 30),
           ),
+
           BottomNavigationBarItem(
-            icon: Icon(Icons.category_outlined, size: 30),
-            label: 'Categories',
+            icon: Icon(Icons.palette_outlined, size: 30),
+            label: 'Colors',
             backgroundColor: Colors.blue,
-            activeIcon: Icon(Icons.category, size: 30),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings_outlined, size: 30),
-            label: 'Settings',
-            backgroundColor: Colors.blue,
-            activeIcon: Icon(Icons.settings, size: 30),
+            activeIcon: Icon(Icons.palette, size: 30),
           )
         ],
         currentIndex: _selectedPage,

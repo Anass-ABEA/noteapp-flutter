@@ -9,6 +9,8 @@ import 'package:flutter_app1/widgets/NoteWidget.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:localstorage/localstorage.dart';
 
+import '../main.dart';
+
 class NoteListInterface extends StatefulWidget {
   @override
   _NoteListInterface createState() => _NoteListInterface();
@@ -17,17 +19,12 @@ class NoteListInterface extends StatefulWidget {
 class _NoteListInterface extends State<NoteListInterface> {
   List<GlobalKey<NoteWidgetState>> globalKeys = [];
 
+
   bool _EDITOR = false;
   List<NoteWidget> _noteWidgets = <NoteWidget>[];
   int size = 0;
 
   final LocalStorage storage = new LocalStorage('notes');
-
-  void _addToNotes(NoteWidget note) {
-    setState(() {
-      _noteWidgets.add(note);
-    });
-  }
 
   changeDisplayEditor() {
     print("LONG PRESSED");
@@ -59,12 +56,6 @@ class _NoteListInterface extends State<NoteListInterface> {
     return _EDITOR;
   }
 
-  void _resetEditorMode() {
-    setState(() {
-      _EDITOR = false;
-    });
-  }
-
   deleteSelectedNotes() {
     List<GlobalKey<NoteWidgetState>> temp = [];
     int i = 0;
@@ -79,17 +70,10 @@ class _NoteListInterface extends State<NoteListInterface> {
       i++;
     }
 
-    setState(() {
-      _EDITOR = false;
-      globalKeys = temp;
-      print(temp);
-    });
-
     storage.setItem("list", noteList);
-    loadStateFromStorage();
 
-    clearList();
-    resetList();
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => MyApp(0)));
   }
 
 
@@ -97,6 +81,13 @@ class _NoteListInterface extends State<NoteListInterface> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: Visibility(
+        visible: _noteWidgets.length==0,
+        child: FloatingActionButton.extended(onPressed: (){
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => MyApp(1)));
+        }, label: Text("New Note"),icon: Icon(Icons.add),),
+      ),
       appBar: AppBar(
         centerTitle: true,
         title: Text("NOTES"),
@@ -171,18 +162,28 @@ class _NoteListInterface extends State<NoteListInterface> {
 
   @override
   void initState() {
-    super.initState();
     loadStateFromStorage();
+    super.initState();
   }
 
-  loadStateFromStorage() {
-    _noteWidgets = <NoteWidget>[];
-    List<Map<String, dynamic>> jsonList = [];
-    if (storage.getItem("list") != null)
-      jsonList = List<Map<String, dynamic>>.from(storage.getItem("list"));
+  loadStateFromStorage() async  {
+    List<Map<String, dynamic>> jsonList;
+    for( int i = 0; i< 3 ; i++){
+      try{
+        await storage.ready.then((value) => jsonList = List<Map<String, dynamic>>.from(storage.getItem("list")));
+        print("STORAGE FULL "+jsonList.length.toString());
+        break;
+      }catch(e){
+        jsonList = [];
+        storage.setItem("list", []);
+        sleep(Duration(milliseconds: 100));
+      }
+    }
 
-    if (jsonList == null || jsonList.length == 0) {
-      jsonList = [];
+   /* if (jsonList == null || jsonList.length == 0) {
+      print("JSON LIST " +jsonList.toString());
+
+      *//*jsonList = [];
       jsonList.add(Note.extras(
           "NOTE TITLE",
           "THIS IS THE NOTE CONTENT ",
@@ -233,22 +234,30 @@ class _NoteListInterface extends State<NoteListInterface> {
       categories.add("TEST 2");
       categories.add("HELLO");
       storage.setItem("categories", categories);
-      storage.setItem("list", jsonList);
+
+      storage.setItem("list", jsonList);*//*
+
     } else {
       print("READ FROM JSON");
-    }
+    }*/
 
     int i = 0;
+    print("AM IN!! "+jsonList.length.toString());
+    List<NoteWidget> notesWDGT = [];
     for (Map<String, dynamic> element in jsonList) {
       GlobalKey<NoteWidgetState> key = GlobalKey<NoteWidgetState>();
       globalKeys.add(key);
-      _addToNotes(new NoteWidget(
+      notesWDGT.add(new NoteWidget(
         note: Note.fromJSON(element),
         position: i,
         EDITOR: _getEDITORVALUE,
         key: key,
         categoryItem: false,
       ));
+
+      setState(() {
+        _noteWidgets = notesWDGT;
+      });
       i++;
     }
     setState(() {
