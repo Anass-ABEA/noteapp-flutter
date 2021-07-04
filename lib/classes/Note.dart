@@ -1,6 +1,7 @@
 // @dart=2.9
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_app1/classes/colors.dart';
 
 class Note{
@@ -14,6 +15,11 @@ class Note{
 
   Note(this.title, this.content, this.date, this.textColor, this.bgColor);
   Note.extras(this.title, this.content, this.date, this.textColor, this.bgColor,this.category);
+
+  Note.empty(){
+    this.bgColor = Colors.blue;
+    this.textColor = Colors.black;
+  }
 
   Note.fromJSON(Map<String, dynamic> json) {
     this.title = json["title"];

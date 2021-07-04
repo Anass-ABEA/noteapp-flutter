@@ -1,5 +1,6 @@
 // @dart=2.9
 import 'package:flutter/material.dart';
+import 'package:flutter_app1/interfaces/NewNoteInterface.dart';
 import 'package:flutter_app1/interfaces/NoteListInterface.dart';
 import 'package:flutter_app1/settings.dart';
 
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'NOTES',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -41,9 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<Widget> _pages = [
     NoteListInterface(),
-    Center(
-      child: Text("OK 2"),
-    ),
+    NewNoteInterface(note: null),
     Center(
       child: Text("OK 2"),
     ),
@@ -53,10 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(widget.title),
-      ),
+
       body: _pages[_selectedPage],
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[

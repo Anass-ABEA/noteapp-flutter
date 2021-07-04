@@ -92,50 +92,59 @@ class _NoteListInterface extends State<NoteListInterface> {
     resetList();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        child: Scaffold(
-          body: Container(
-            width: double.infinity,
-            height: double.infinity,
-            child: ListView.builder(
-                itemCount: size,
-                itemBuilder: (BuildContext bbContext, int index) {
-                  return Column(mainAxisSize: MainAxisSize.max, children: [
-                    displayNotewidget(_noteWidgets.elementAt(index))
-                  ]);
-                }),
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text("NOTES"),
+      ),
+      body: WillPopScope(
+
+          child: Scaffold(
+            body: Container(
+              width: double.infinity,
+              height: double.infinity,
+              child: ListView.builder(
+                  itemCount: size,
+                  itemBuilder: (BuildContext bbContext, int index) {
+                    return Column(mainAxisSize: MainAxisSize.max, children: [
+                      displayNotewidget(_noteWidgets.elementAt(index))
+                    ]);
+                  }),
+            ),
+            floatingActionButton: new Visibility(
+                visible: _EDITOR,
+                child: FloatingActionButton.extended(
+                  onPressed: () {
+                    deleteSelectedNotes();
+                  },
+                  icon: Icon(
+                    Icons.delete_forever,
+                    color: Colors.red,
+                  ),
+                  label: Text(
+                    "Delete",
+                    style: TextStyle(color: Colors.red),
+                  ),
+                  backgroundColor: Colors.white,
+                )),
           ),
-          floatingActionButton: new Visibility(
-              visible: _EDITOR,
-              child: FloatingActionButton.extended(
-                onPressed: () {
-                  deleteSelectedNotes();
-                },
-                icon: Icon(
-                  Icons.delete_forever,
-                  color: Colors.red,
-                ),
-                label: Text(
-                  "Delete",
-                  style: TextStyle(color: Colors.red),
-                ),
-                backgroundColor: Colors.white,
-              )),
-        ),
-        onWillPop: () async {
-          if (_EDITOR) {
-            setState(() {
-              _EDITOR = false;
-            });
-            clearList();
-            resetList();
-          } else {
-            return true;
-          }
-          return false;
-        });
+          onWillPop: () async {
+            if (_EDITOR) {
+              setState(() {
+                _EDITOR = false;
+              });
+              clearList();
+              resetList();
+            } else {
+              return true;
+            }
+            return false;
+          }),
+    );
   }
 
   ElevatedButton displayNotewidget(NoteWidget widget) {
