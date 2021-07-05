@@ -7,7 +7,8 @@ import 'package:flutter_app1/interfaces/SettingsInterface.dart';
 import 'package:localstorage/localstorage.dart';
 
 class SettingsState extends State<SettngsInterface> {
-  List<Color> colorList;
+  List<Color> colorList = [];
+  List<Color> textcolorList = [];
   int len = 0;
   final LocalStorage storage = new LocalStorage('notes');
 
@@ -15,6 +16,7 @@ class SettingsState extends State<SettngsInterface> {
   void initState() {
     super.initState();
     getColorsFromStorage();
+    getTextColorsFromStorage();
   }
 
   @override
@@ -29,7 +31,7 @@ class SettingsState extends State<SettngsInterface> {
         margin: EdgeInsets.all(30),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: Color.fromRGBO(33, 103, 243, 1.0),
+          color: Colors.blue,
           boxShadow: [
             BoxShadow(
                 color: Color.fromRGBO(136, 208, 239, 0.8),
@@ -37,10 +39,10 @@ class SettingsState extends State<SettngsInterface> {
                 spreadRadius: 4)
           ],
         ),
-        child: Container(
-          child: ListView.builder(
-            itemCount: len,
-            itemBuilder: (BuildContext context, int index) {
+        child: ListView.builder(
+          itemCount: (len + textcolorList.length + 1),
+          itemBuilder: (BuildContext context, int index) {
+            if (index < len) {
               Color c = colorList[index];
               return Container(
                 margin: EdgeInsets.all(5),
@@ -63,13 +65,17 @@ class SettingsState extends State<SettngsInterface> {
                     Row(
                       children: [
                         ElevatedButton(
-                          style: ButtonStyle(
-                            elevation: MaterialStateProperty.all(0),
-                            backgroundColor: MaterialStateProperty.all(Color.fromRGBO(33, 103, 243, 1.0)),
-                            overlayColor: MaterialStateProperty.all(Color.fromRGBO(33, 103, 243, 1.0)),
-                            foregroundColor: MaterialStateProperty.all(Color.fromRGBO(33, 103, 243, 1.0)),
-                            shadowColor: MaterialStateProperty.all(Color.fromRGBO(33, 103, 243, 1.0)),
-                          ),
+                            style: ButtonStyle(
+                              elevation: MaterialStateProperty.all(0),
+                              backgroundColor: MaterialStateProperty.all(
+                                  Colors.blue),
+                              overlayColor: MaterialStateProperty.all(
+                                  Colors.blue),
+                              foregroundColor: MaterialStateProperty.all(
+                                  Colors.blue),
+                              shadowColor: MaterialStateProperty.all(
+                                  Colors.blue),
+                            ),
                             onPressed: () {
                               setState(() {
                                 colorList.removeAt(index);
@@ -96,15 +102,20 @@ class SettingsState extends State<SettngsInterface> {
                         ElevatedButton(
                             style: ButtonStyle(
                               elevation: MaterialStateProperty.all(0),
-                              backgroundColor: MaterialStateProperty.all(Color.fromRGBO(33, 103, 243, 1.0)),
-                              overlayColor: MaterialStateProperty.all(Color.fromRGBO(33, 103, 243, 1.0)),
-                              foregroundColor: MaterialStateProperty.all(Color.fromRGBO(33, 103, 243, 1.0)),
-                              shadowColor: MaterialStateProperty.all(Color.fromRGBO(33, 103, 243, 1.0)),
+                              backgroundColor: MaterialStateProperty.all(
+                                  Colors.blue),
+                              overlayColor: MaterialStateProperty.all(
+                                  Colors.blue),
+                              foregroundColor: MaterialStateProperty.all(
+                                  Colors.blue),
+                              shadowColor: MaterialStateProperty.all(
+                                  Colors.blue),
                             ),
                             onPressed: () {
                               Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) => ColorInterface.update(c))).then((value) => getColorsFromStorage());
-
+                                  MaterialPageRoute(builder: (context) =>
+                                      ColorInterface.update(c))).then((value) =>
+                                  getColorsFromStorage());
                             },
                             child: Row(
                               children: [
@@ -123,19 +134,139 @@ class SettingsState extends State<SettngsInterface> {
                   ],
                 ),
               );
-            },
-          ),
+            } else {
+              if (index == len) {
+                return Container(padding: EdgeInsets.all(10),
+                  child: Text("TEXT COLOR",
+                    style: TextStyle(fontSize: 17, color: Colors.white),),);
+              } else {
+                Color c = textcolorList[index - len - 1];
+                return Container(
+                  margin: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      border: Border(
+                          left: BorderSide(color: Colors.white, width: 5))),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white, width: 2),
+                            color: c,
+                            borderRadius: BorderRadius.circular(5)),
+                        width: 50,
+                        height: 50,
+                        child: Text(""),
+                      ),
+                      Row(
+                        children: [
+                          ElevatedButton(
+                              style: ButtonStyle(
+                                elevation: MaterialStateProperty.all(0),
+                                backgroundColor: MaterialStateProperty.all(
+                                Colors.blue),
+                                overlayColor: MaterialStateProperty.all(
+                                Colors.blue),
+                                foregroundColor: MaterialStateProperty.all(
+                                  Colors.blue),
+                                shadowColor: MaterialStateProperty.all(
+                                  Colors.blue),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  textcolorList.removeAt(index - len - 1);
+                                  len--;
+                                });
+                                getColorsFromStorage();
+                                storage.setItem("textColors",
+                                    MyColors.listHexFromColor(textcolorList));
+                              },
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.delete,
+                                    color: Color.fromRGBO(255, 0, 0, 1),
+                                  ),
+                                  Text(
+                                    "Remove",
+                                    style: TextStyle(
+                                      color: Color.fromRGBO(255, 0, 0, 1),
+                                    ),
+                                  )
+                                ],
+                              )),
+                          ElevatedButton(
+                              style: ButtonStyle(
+                                elevation: MaterialStateProperty.all(0),
+                                backgroundColor: MaterialStateProperty.all(
+                                    Colors.blue),
+                                overlayColor: MaterialStateProperty.all(
+                                    Colors.blue),
+                                foregroundColor: MaterialStateProperty.all(
+                                    Colors.blue),
+                                shadowColor: MaterialStateProperty.all(
+                                    Colors.blue),
+                              ),
+                              onPressed: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) =>
+                                        ColorInterface.updateText(c))).then((
+                                    value) => getTextColorsFromStorage());
+                              },
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.edit,
+                                    color: Color.fromRGBO(0, 255, 0, 1),
+                                  ),
+                                  Text("Edit",
+                                      style: TextStyle(
+                                        color: Color.fromRGBO(0, 255, 0, 1),
+                                      ))
+                                ],
+                              ))
+                        ],
+                      )
+                    ],
+                  ),
+                );
+              }
+            }
+          },
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => ColorInterface())).then((value) => getColorsFromStorage());
+              MaterialPageRoute(builder: (context) => ColorInterface())).then((value)  {
+          getColorsFromStorage();
+          getTextColorsFromStorage();
+        });
         },
         label: Text("Add Color"),
         icon: Icon(Icons.add),
       ),
     );
+  }
+
+  getTextColorsFromStorage() async {
+    await storage.ready.then((e) {
+      List<String> stringColors;
+      if (storage.getItem("textColors") != null)
+        stringColors = List<String>.from(storage.getItem("textColors"));
+
+      if (stringColors == null || stringColors.length == 0) {
+        List<Color> colorsList = <Color>[
+          Colors.black,
+          Colors.white,
+        ];
+        storage.setItem("textColors", MyColors.listHexFromColor(colorsList));
+      }
+      setState(() {
+        textcolorList = MyColors.listColorsFromListHex(stringColors);
+      });
+    });
   }
 
   getColorsFromStorage() async {

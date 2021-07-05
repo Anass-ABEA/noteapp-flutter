@@ -20,7 +20,7 @@ class _NoteListInterface extends State<NoteListInterface> {
   List<GlobalKey<NoteWidgetState>> globalKeys = [];
 
 
-  bool _EDITOR = false;
+  bool editor = false;
   List<NoteWidget> _noteWidgets = <NoteWidget>[];
   int size = 0;
 
@@ -29,7 +29,7 @@ class _NoteListInterface extends State<NoteListInterface> {
   changeDisplayEditor() {
     print("LONG PRESSED");
     setState(() {
-      _EDITOR = true;
+      editor = true;
       size = 0;
       print("part1");
       sleep(Duration(seconds: 1));
@@ -53,7 +53,7 @@ class _NoteListInterface extends State<NoteListInterface> {
   }
 
   bool _getEDITORVALUE() {
-    return _EDITOR;
+    return editor;
   }
 
   deleteSelectedNotes() {
@@ -107,7 +107,7 @@ class _NoteListInterface extends State<NoteListInterface> {
                   }),
             ),
             floatingActionButton: new Visibility(
-                visible: _EDITOR,
+                visible: editor,
                 child: FloatingActionButton.extended(
                   onPressed: () {
                     deleteSelectedNotes();
@@ -124,9 +124,9 @@ class _NoteListInterface extends State<NoteListInterface> {
                 )),
           ),
           onWillPop: () async {
-            if (_EDITOR) {
+            if (editor) {
               setState(() {
-                _EDITOR = false;
+                editor = false;
               });
               clearList();
               resetList();
@@ -153,7 +153,7 @@ class _NoteListInterface extends State<NoteListInterface> {
         child: widget,
         onLongPress: () {
           setState(() {
-            _EDITOR = true;
+            editor = true;
           });
           clearList();
           resetList();
@@ -250,7 +250,7 @@ class _NoteListInterface extends State<NoteListInterface> {
       notesWDGT.add(new NoteWidget(
         note: Note.fromJSON(element),
         position: i,
-        EDITOR: _getEDITORVALUE,
+        editor: _getEDITORVALUE,
         key: key,
         categoryItem: false,
       ));

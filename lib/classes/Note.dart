@@ -57,7 +57,7 @@ class Note{
   }
 
   void addCategory(String categori) {
-    if(category.remove("NONE"));
+    category.remove("NONE");
     if(!this.category.contains(categori))
       category.add(categori);
   }

@@ -12,8 +12,9 @@ class ColorState extends State<ColorInterface> {
   Color color;
   Color oldColor;
   bool newColor;
+  bool isTextColor;
 
-  ColorState(this.color, this.newColor) {
+  ColorState(this.color, this.newColor,this.isTextColor) {
     this.oldColor = color;
   }
 
@@ -48,6 +49,22 @@ class ColorState extends State<ColorInterface> {
       body: Flex(
         direction: Axis.vertical,
         children: [
+          Visibility(child: Row(
+
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Change Text Color", style: TextStyle(fontSize: 17,),),
+              Switch(
+                value: isTextColor,
+                onChanged: (bool val){
+                  setState(() {
+                    isTextColor = val;
+                  });
+                },
+
+              )
+            ],
+          ),visible: newColor,),
           ColorPicker(
             color: color,
             pickersEnabled: <ColorPickerType, bool>{
@@ -67,7 +84,7 @@ class ColorState extends State<ColorInterface> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
+              Visibility(child: Container(
                 decoration: BoxDecoration(
                     color: color, borderRadius: BorderRadius.circular(10)),
                 margin: EdgeInsets.all(10),
@@ -83,7 +100,24 @@ class ColorState extends State<ColorInterface> {
                     )
                   ],
                 ),
-              ),
+              ),visible: !isTextColor,),
+              Visibility(child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.blue, borderRadius: BorderRadius.circular(10)),
+                margin: EdgeInsets.all(10),
+                width: 50,
+                height: 50,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "NEW",
+                      style: TextStyle(fontFamily: "RobotoSlab",color: color),
+                    )
+                  ],
+                ),
+              ),visible: isTextColor,),
               Visibility(
                 child: Container(
                   margin: EdgeInsets.all(10),
@@ -102,29 +136,52 @@ class ColorState extends State<ColorInterface> {
                   decoration: BoxDecoration(
                       color: oldColor, borderRadius: BorderRadius.circular(10)),
                 ),
-                visible: !newColor,
+                visible: !newColor && !isTextColor,
+              ),
+              Visibility(
+                child: Container(
+                  margin: EdgeInsets.all(10),
+                  width: 50,
+                  height: 50,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "OLD",
+                        style: TextStyle(fontFamily: "RobotoSlab",color: oldColor),
+                      )
+                    ],
+                  ),
+                  decoration: BoxDecoration(
+                      color: Colors.blue, borderRadius: BorderRadius.circular(10)),
+                ),
+                visible: !newColor && isTextColor,
               )
             ],
-          )
+          ),
+
         ],
       ),
     );
   }
 
   void saveColor() {
+    String saveTo ="colors";
+    if(isTextColor) saveTo = "textColors";
     if (newColor) {
       List<String> stringColors = [];
-      if (storage.getItem("colors") != null) {
-        stringColors = List<String>.from(storage.getItem("colors"));
+      if (storage.getItem(saveTo) != null) {
+        stringColors = List<String>.from(storage.getItem(saveTo));
       }
       stringColors.add(MyColors.colorToHexString(color));
-      storage.setItem("colors", stringColors);
+      storage.setItem(saveTo, stringColors);
     } else {
-      List<String> stringColors = List<String>.from(storage.getItem("colors"));
+      List<String> stringColors = List<String>.from(storage.getItem(saveTo));
       int pos = stringColors.indexOf(MyColors.colorToHexString(oldColor));
       stringColors.removeAt(pos);
       stringColors.add(MyColors.colorToHexString(color));
-      storage.setItem("colors", stringColors);
+      storage.setItem(saveTo, stringColors);
     }
     Navigator.pop(context);
   }

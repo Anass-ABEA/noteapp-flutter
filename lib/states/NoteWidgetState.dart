@@ -6,16 +6,14 @@ import 'package:flutter_app1/interfaces/NewNoteInterface.dart';
 import 'package:flutter_app1/interfaces/NoteListInterfaceCategroy.dart';
 import 'package:flutter_app1/widgets/NoteWidget.dart';
 
-import '../main.dart';
-
 class NoteWidgetState extends State<NoteWidget> {
   final Note note;
 
   bool categoryItem;
 
-  NoteWidgetState({@required this.note, @required this.position, @required this.EDITOR, @required this.categoryItem});
+  NoteWidgetState({@required this.note, @required this.position, @required this.editor, @required this.categoryItem});
 
-  bool Function() EDITOR;
+  bool Function() editor;
   int position;
   bool _isSelected = false;
    bool _isEdit;
@@ -29,11 +27,7 @@ class NoteWidgetState extends State<NoteWidget> {
 
   static changeState() {}
 
-  _changeCheckState() {
-    setState(() {
-      _isSelected = true;
-    });
-  }
+
 
   getTitleAndCategory() {
     List<Widget> res = [];
@@ -118,7 +112,7 @@ class NoteWidgetState extends State<NoteWidget> {
         padding: EdgeInsets.zero,
       ),
       onPressed: () {
-        if (Function.apply(EDITOR, null)) {
+        if (Function.apply(editor, null)) {
           print("EDITOR MODE ON");
           setState(() {
             _isSelected = !_isSelected;
@@ -173,8 +167,9 @@ class NoteWidgetState extends State<NoteWidget> {
 
   @override
   void initState() {
+    super.initState();
     print(categoryItem);
-    this._isEdit = Function.apply(EDITOR, null);
+    this._isEdit = Function.apply(editor, null);
   }
 
 

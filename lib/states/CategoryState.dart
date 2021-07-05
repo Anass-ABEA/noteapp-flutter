@@ -77,6 +77,7 @@ class CategoryState extends State<CategoryInterface> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
+      onWillPop: () async {return true;},
       child: Scaffold(
         appBar: AppBar(
           title: Text(newCategory ? "New Category" : "Update Category"),

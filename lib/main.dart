@@ -1,6 +1,5 @@
 // @dart=2.9
 import 'package:flutter/material.dart';
-import 'package:flutter_app1/interfaces/CategoryListInterface.dart';
 import 'package:flutter_app1/interfaces/NewNoteInterface.dart';
 import 'package:flutter_app1/interfaces/NoteListInterface.dart';
 

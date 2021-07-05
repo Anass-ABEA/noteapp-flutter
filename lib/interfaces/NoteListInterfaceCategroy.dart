@@ -21,7 +21,7 @@ class NoteListInterfaceCategroy extends StatefulWidget {
 class _NoteListInterface extends State<NoteListInterfaceCategroy> {
   List<GlobalKey<NoteWidgetState>> globalKeys = [];
   String category;
-  bool _EDITOR = false;
+  bool _editor = false;
   List<NoteWidget> _noteWidgets = <NoteWidget>[];
   int size = 0;
 
@@ -38,7 +38,7 @@ class _NoteListInterface extends State<NoteListInterfaceCategroy> {
   changeDisplayEditor() {
     print("LONG PRESSED");
     setState(() {
-      _EDITOR = true;
+      _editor = true;
       size = 0;
       print("part1");
       sleep(Duration(seconds: 1));
@@ -62,17 +62,12 @@ class _NoteListInterface extends State<NoteListInterfaceCategroy> {
   }
 
   bool _getEDITORVALUE() {
-    return _EDITOR;
+    return _editor;
   }
 
-  void _resetEditorMode() {
-    setState(() {
-      _EDITOR = false;
-    });
-  }
+
 
   deleteSelectedNotes() {
-    List<GlobalKey<NoteWidgetState>> temp = [];
 
     List<Map<String, dynamic>> list =
         List<Map<String, dynamic>>.from(storage.getItem("list"));
@@ -139,7 +134,7 @@ class _NoteListInterface extends State<NoteListInterfaceCategroy> {
             }),
       ),
       floatingActionButton: new Visibility(
-          visible: _EDITOR,
+          visible: _editor,
           child: FloatingActionButton.extended(
             onPressed: () {
               deleteSelectedNotes();
@@ -172,7 +167,7 @@ class _NoteListInterface extends State<NoteListInterfaceCategroy> {
         child: widget,
         onLongPress: () {
           setState(() {
-            _EDITOR = true;
+            _editor = true;
           });
           clearList();
           resetList();
@@ -242,7 +237,7 @@ class _NoteListInterface extends State<NoteListInterfaceCategroy> {
         _addToNotes(new NoteWidget(
           note: Note.fromJSON(element),
           position: i,
-          EDITOR: _getEDITORVALUE,
+          editor: _getEDITORVALUE,
           key: key,
           categoryItem: true,
         ));
